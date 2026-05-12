@@ -125,7 +125,7 @@ export const es = {
   },
   form: {
     title: "Solicitar Cotización",
-    subtitle: "Se abrirá WhatsApp con tu mensaje listo para enviar.",
+    subtitle: "Solicita una cotización gratis. Te contactaremos pronto.",
     nameLabel: "Nombre completo",
     namePlaceholder: "Ej: Juan Pérez",
     emailLabel: "Correo electrónico",
@@ -243,9 +243,9 @@ export const en = {
   contact: {
     title: "Contact Us Today",
     subtitle: "Send us your info and we'll get back to you with a personalized quote. No obligation.",
-    phone: "+1 234 567 890",
+    phone: "+1 (832) 436-5580",
     email: "contact@limpiezaperfecta.com",
-    address: "Central City, 123 Main Ave",
+    address: "5650 Timber Creek Pl Dr, Houston, TX 77084",
   },
   footer: {
     description: "Transforming homes and offices into spotless, healthy, and welcoming spaces. Your peace of mind is our priority.",
@@ -270,7 +270,7 @@ export const en = {
   },
   form: {
     title: "Get a Quote",
-    subtitle: "WhatsApp will open with your message ready to send.",
+    subtitle: "Request your free quote. We will be in touch shortly.",
     nameLabel: "Full Name",
     namePlaceholder: "e.g. John Doe",
     emailLabel: "Email Address",
