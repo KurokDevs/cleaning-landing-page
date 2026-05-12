@@ -183,7 +183,7 @@ export const en = {
   },
   about: {
     title: "More than cleaning, we provide peace of mind",
-    paragraph1: "At Neat &amp; Co, we are a team of professionals passionate about order and hygiene. We have spent years transforming homes and offices into healthy, bright, and welcoming spaces.",
+    paragraph1: "At Neat & Co, we are a team of professionals passionate about order and hygiene. We have spent years transforming homes and offices into healthy, bright, and welcoming spaces.",
     paragraph2: "We stand out for our attention to detail, use of top-quality products, and our strict hiring process. We care about your space as much as you do.",
     features: [
       { title: "Trusted Staff", description: "Verified and highly trained team." },
