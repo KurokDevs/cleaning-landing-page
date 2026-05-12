@@ -114,8 +114,8 @@ function PageContent() {
       <section id="nosotros" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="relative h-80 lg:h-full min-h-[400px] rounded-2xl overflow-hidden shadow-xl bg-gray-200 flex items-center justify-center">
-              <span className="text-gray-400 font-medium">{t.about.title}</span>
+            <div className="relative h-80 lg:h-full min-h-[400px] rounded-2xl overflow-hidden shadow-xl">
+              <img src="/assets/sala.jpg" alt={t.about.title} className="w-full h-full object-cover" />
             </div>
             <div>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">{t.about.title}</h2>
