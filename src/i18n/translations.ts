@@ -38,7 +38,7 @@ export const es = {
   },
   about: {
     title: "Más que limpieza, brindamos tranquilidad",
-    paragraph1: "En Neat &amp; Co, somos un equipo de profesionales apasionados por el orden y la higiene. Llevamos años transformando hogares y oficinas en espacios saludables, brillantes y acogedores.",
+    paragraph1: "En Neat & Co, somos un equipo de profesionales apasionados por el orden y la higiene. Llevamos años transformando hogares y oficinas en espacios saludables, brillantes y acogedores.",
     paragraph2: "Nos diferenciamos por nuestra atención al detalle, el uso de productos de la más alta calidad, y nuestro estricto proceso de selección de personal. Nos importa tu espacio tanto como a ti.",
     features: [
       { title: "Personal de confianza", description: "Equipo verificado y altamente capacitado." },
