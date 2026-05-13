@@ -98,9 +98,9 @@ export const es = {
   contact: {
     title: "Contáctanos hoy",
     subtitle: "Déjanos tus datos y te enviaremos una cotización personalizada sin compromiso.",
-    phone: "+1 234 567 890",
-    email: "contacto@limpiezaperfecta.com",
-    address: "Ciudad Central, Av. Principal 123",
+    phone: "+1 (832) 436-5580",
+    email: "contact@limpiezaperfecta.com",
+    address: "5650 Timber Creek Pl Dr, Houston, TX 77084",
   },
   footer: {
     description: "Transformando hogares y oficinas en espacios impecables, saludables y acogedores. Tu tranquilidad es nuestra prioridad.",
