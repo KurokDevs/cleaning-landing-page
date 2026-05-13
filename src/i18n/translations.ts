@@ -51,6 +51,8 @@ export const es = {
     subtitle: "Desliza para ver la transformación de los espacios antes y después de nuestro servicio de limpieza profunda.",
     livingRoom: "Limpieza de Sala de Estar",
     kitchen: "Limpieza de Cocina",
+    before: "Antes",
+    after: "Después",
   },
   testimonials: {
     title: "Lo que dicen nuestros clientes",
@@ -98,9 +100,9 @@ export const es = {
   contact: {
     title: "Contáctanos hoy",
     subtitle: "Déjanos tus datos y te enviaremos una cotización personalizada sin compromiso.",
-    phone: "+1 234 567 890",
-    email: "contacto@limpiezaperfecta.com",
-    address: "Ciudad Central, Av. Principal 123",
+    phone: "+1 (832) 436-5580",
+    email: "contact@limpiezaperfecta.com",
+    address: "5650 Timber Creek Pl Dr, Houston, TX 77084",
   },
   footer: {
     description: "Transformando hogares y oficinas en espacios impecables, saludables y acogedores. Tu tranquilidad es nuestra prioridad.",
@@ -198,6 +200,8 @@ export const en = {
     subtitle: "Slide to see the transformation of spaces before and after our deep cleaning service.",
     livingRoom: "Living Room Cleaning",
     kitchen: "Kitchen Cleaning",
+    before: "Before",
+    after: "After",
   },
   testimonials: {
     title: "What our clients say",
