@@ -1,8 +1,10 @@
 import * as React from "react"
 import { useState } from "react"
+import { useTranslation } from "../i18n/LanguageContext"
 
 export function BeforeAfterSlider({ beforeImage, afterImage }: { beforeImage: string, afterImage: string }) {
   const [position, setPosition] = useState(50)
+  const t = useTranslation()
 
   return (
     <div className="relative w-full h-[300px] md:h-[400px] rounded-2xl overflow-hidden group select-none bg-gray-200">
@@ -10,7 +12,7 @@ export function BeforeAfterSlider({ beforeImage, afterImage }: { beforeImage: st
       <div className="absolute inset-0 w-full h-full">
         <img src={beforeImage} alt="Antes" className="w-full h-full object-cover" />
         <div className="absolute top-4 right-4 bg-gray-900/70 text-white px-3 py-1 rounded-lg text-sm font-bold backdrop-blur-sm z-0">
-          Antes
+          {t.results.before}
         </div>
       </div>
 
@@ -21,7 +23,7 @@ export function BeforeAfterSlider({ beforeImage, afterImage }: { beforeImage: st
       >
         <img src={afterImage} alt="Después" className="w-full h-full object-cover" />
         <div className="absolute top-4 left-4 bg-blue-600 text-white px-3 py-1 rounded-lg text-sm font-bold shadow-lg">
-          Después
+          {t.results.after}
         </div>
       </div>
 

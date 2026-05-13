@@ -51,6 +51,8 @@ export const es = {
     subtitle: "Desliza para ver la transformación de los espacios antes y después de nuestro servicio de limpieza profunda.",
     livingRoom: "Limpieza de Sala de Estar",
     kitchen: "Limpieza de Cocina",
+    before: "Antes",
+    after: "Después",
   },
   testimonials: {
     title: "Lo que dicen nuestros clientes",
@@ -198,6 +200,8 @@ export const en = {
     subtitle: "Slide to see the transformation of spaces before and after our deep cleaning service.",
     livingRoom: "Living Room Cleaning",
     kitchen: "Kitchen Cleaning",
+    before: "Before",
+    after: "After",
   },
   testimonials: {
     title: "What our clients say",
