@@ -26,13 +26,14 @@ export function ContactForm() {
     
     const name = formData.get("name") as string
     const email = formData.get("email") as string
+    const phone = formData.get("phone") as string
     const service = formData.get("service") as string
     const message = formData.get("message") as string
 
     try {
       const { error } = await supabase
         .from('contact_requests')
-        .insert([{ name, email, service, message }])
+        .insert([{ name, email, phone, service, message }])
 
       if (error) throw error
 
@@ -77,6 +78,18 @@ export function ContactForm() {
             <Input id="email" name="email" type="email" placeholder={t.form.emailPlaceholder} required disabled={isSubmitting} />
           </div>
           
+          <div className="space-y-2">
+            <Label htmlFor="phone">{t.form.phoneLabel}</Label>
+            <Input
+              id="phone"
+              name="phone"
+              type="tel"
+              placeholder={t.form.phonePlaceholder}
+              required
+              disabled={isSubmitting}
+            />
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="service">{t.form.serviceLabel}</Label>
             <Select name="service" required defaultValue="residencial" disabled={isSubmitting}>
