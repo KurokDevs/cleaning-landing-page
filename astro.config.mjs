@@ -7,6 +7,15 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://neatandco.com',
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'es'],
+    routing: {
+      prefixDefaultLocale: false, // / = English, /es/ = Spanish
+    },
+  },
+
   vite: {
     plugins: [tailwindcss()]
   },

@@ -1,0 +1,29 @@
+---
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  phone: string;
+}
+
+const { lang, phone } = Astro.props;
+const cleanPhone = phone.replace(/\s|\(|\)|-/g, '');
+const message = lang === 'es'
+  ? "¡Hola! Me interesan sus servicios de limpieza. ¿Podrían enviarme una cotización?"
+  : "Hi! I'm interested in your cleaning services. Could I get a quote?";
+const smsHref = `sms:${cleanPhone}?body=${encodeURIComponent(message)}`;
+const ariaLabel = lang === 'es' ? 'Envíanos un mensaje de texto' : 'Send us a text message';
+---
+
+<a
+  href={smsHref}
+  class="md:hidden fixed bottom-6 right-6 z-50 bg-blue-600 text-white p-4 rounded-full shadow-2xl hover:bg-blue-700 hover:scale-110 hover:-translate-y-2 transition-all duration-300 flex items-center justify-center"
+  aria-label={ariaLabel}
+>
+  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path>
+    <path d="M8 12h.01"></path>
+    <path d="M12 12h.01"></path>
+    <path d="M16 12h.01"></path>
+  </svg>
+</a>
