@@ -1,0 +1,32 @@
+---
+import type { Translation } from '../../i18n/ui';
+
+interface Props {
+  t: Translation;
+}
+
+const { t } = Astro.props;
+---
+
+<section id="resenas" class="py-20 bg-blue-600 text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">{t.testimonials.title}</h2>
+      <p class="text-lg text-blue-100 max-w-2xl mx-auto">{t.testimonials.subtitle}</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-8">
+      {t.testimonials.cards.map((card) => (
+        <div class="bg-white text-gray-900 rounded-2xl p-8 shadow-xl hover:-translate-y-2 transition-transform duration-300">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center font-bold text-blue-600 text-lg">{card.initials}</div>
+            <div>
+              <h4 class="font-bold text-lg">{card.name}</h4>
+              <div class="text-yellow-400 text-sm" aria-label="5 of 5 stars">★★★★★</div>
+            </div>
+          </div>
+          <p class="text-gray-600 italic">{card.text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

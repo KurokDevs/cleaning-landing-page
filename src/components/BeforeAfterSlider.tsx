@@ -1,34 +1,39 @@
 import * as React from "react"
 import { useState } from "react"
-import { useTranslation } from "../i18n/LanguageContext"
 
-export function BeforeAfterSlider({ beforeImage, afterImage }: { beforeImage: string, afterImage: string }) {
+interface Props {
+  beforeImage: string
+  afterImage: string
+  beforeLabel: string
+  afterLabel: string
+}
+
+export function BeforeAfterSlider({ beforeImage, afterImage, beforeLabel, afterLabel }: Props) {
   const [position, setPosition] = useState(50)
-  const t = useTranslation()
 
   return (
     <div className="relative w-full h-[300px] md:h-[400px] rounded-2xl overflow-hidden group select-none bg-gray-200">
-      {/* Imagen Antes (Fondo) */}
+      {/* Before image (background) */}
       <div className="absolute inset-0 w-full h-full">
-        <img src={beforeImage} alt="Antes" className="w-full h-full object-cover" />
+        <img src={beforeImage} alt={beforeLabel} className="w-full h-full object-cover" />
         <div className="absolute top-4 right-4 bg-gray-900/70 text-white px-3 py-1 rounded-lg text-sm font-bold backdrop-blur-sm z-0">
-          {t.results.before}
+          {beforeLabel}
         </div>
       </div>
 
-      {/* Imagen Después (Frente recortado) */}
-      <div 
+      {/* After image (clipped) */}
+      <div
         className="absolute inset-0 w-full h-full"
         style={{ clipPath: `polygon(0 0, ${position}% 0, ${position}% 100%, 0 100%)` }}
       >
-        <img src={afterImage} alt="Después" className="w-full h-full object-cover" />
+        <img src={afterImage} alt={afterLabel} className="w-full h-full object-cover" />
         <div className="absolute top-4 left-4 bg-blue-600 text-white px-3 py-1 rounded-lg text-sm font-bold shadow-lg">
-          {t.results.after}
+          {afterLabel}
         </div>
       </div>
 
-      {/* Línea divisoria y manija */}
-      <div 
+      {/* Divider line + handle */}
+      <div
         className="absolute inset-y-0 w-1 bg-white pointer-events-none z-10 shadow-[0_0_10px_rgba(0,0,0,0.3)]"
         style={{ left: `calc(${position}% - 2px)` }}
       >
@@ -39,15 +44,14 @@ export function BeforeAfterSlider({ beforeImage, afterImage }: { beforeImage: st
         </div>
       </div>
 
-      {/* Input Range invisible para controlar el slider */}
-      <input 
-        type="range" 
-        min="0" 
-        max="100" 
-        value={position} 
+      <input
+        type="range"
+        min="0"
+        max="100"
+        value={position}
         onChange={(e) => setPosition(Number(e.target.value))}
         className="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-20"
-        aria-label="Arrastra para comparar antes y después"
+        aria-label={`Drag to compare ${beforeLabel} and ${afterLabel}`}
       />
     </div>
   )

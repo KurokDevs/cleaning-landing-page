@@ -1,0 +1,23 @@
+---
+import type { Lang } from '../i18n/ui';
+import { getAlternateUrl } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const targetUrl = getAlternateUrl(Astro.url.pathname, lang);
+const targetLang: Lang = lang === 'es' ? 'en' : 'es';
+---
+
+<a
+  href={targetUrl}
+  class="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-gray-300 text-sm font-medium text-gray-600 hover:border-blue-500 hover:text-blue-600 transition-all duration-200 bg-white shadow-sm"
+  aria-label={`Switch to ${targetLang.toUpperCase()}`}
+  hreflang={targetLang}
+>
+  <span class={lang === 'en' ? 'text-blue-600 font-bold' : 'text-gray-400'}>EN</span>
+  <span class="text-gray-300 text-xs">/</span>
+  <span class={lang === 'es' ? 'text-blue-600 font-bold' : 'text-gray-400'}>ES</span>
+</a>

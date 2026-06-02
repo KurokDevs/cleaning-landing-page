@@ -1,0 +1,62 @@
+---
+import type { Lang, Translation } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  t: Translation;
+}
+
+const { lang, t } = Astro.props;
+const base = lang === 'es' ? '/es' : '';
+---
+
+<section class="relative bg-blue-50 py-20 lg:py-32 overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+    <div>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
+        {t.hero.titleStart} <span class="text-blue-600">{t.hero.titleHighlight}</span>,<br /> {t.hero.titleEnd}
+      </h1>
+      <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-lg">
+        {t.hero.description}
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4">
+        <a
+          href={`${base}/#contacto`}
+          class="bg-blue-600 text-white text-center px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-700 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 active:scale-95"
+        >
+          {t.hero.cta}
+        </a>
+        <a
+          href={`${base}/#servicios`}
+          class="bg-white text-blue-600 text-center px-8 py-4 rounded-xl font-bold text-lg border border-blue-100 hover:bg-blue-50 hover:-translate-y-1 hover:shadow-md transition-all duration-300 active:scale-95"
+        >
+          {t.hero.seeServices}
+        </a>
+      </div>
+      <div class="mt-8 flex items-center gap-4 text-sm text-gray-500">
+        <div class="flex -space-x-2" aria-hidden="true">
+          <div class="w-8 h-8 rounded-full bg-blue-200 border-2 border-white"></div>
+          <div class="w-8 h-8 rounded-full bg-blue-300 border-2 border-white"></div>
+          <div class="w-8 h-8 rounded-full bg-blue-400 border-2 border-white"></div>
+        </div>
+        <p>{t.hero.clients}</p>
+      </div>
+    </div>
+    <div class="relative h-64 sm:h-80 lg:h-full min-h-[400px] flex items-center justify-center">
+      <div class="bg-white p-6 rounded-2xl shadow-xl max-w-sm w-full border border-gray-100 transform rotate-2 hover:rotate-0 transition duration-300">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-green-600 text-xl">✓</div>
+          <div>
+            <p class="font-bold text-gray-900">{t.hero.completedLabel}</p>
+            <p class="text-sm text-gray-500">{t.hero.timeAgo}</p>
+          </div>
+        </div>
+        <p class="text-sm text-gray-600 italic mb-2">{t.hero.reviewText}</p>
+        <div class="mt-6 pt-4 border-t border-gray-100 flex justify-between items-center">
+          <span class="text-yellow-400" aria-label="5 of 5 stars">★★★★★</span>
+          <a href={`${base}/#resenas`} class="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline cursor-pointer">{t.hero.viewReviews}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

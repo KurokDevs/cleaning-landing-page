@@ -1,0 +1,38 @@
+---
+import Logo from '../Logo.astro';
+import LanguageToggle from '../LanguageToggle.astro';
+import type { Lang, Translation } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  t: Translation;
+}
+
+const { lang, t } = Astro.props;
+const base = lang === 'es' ? '/es' : '';
+---
+
+<header class="bg-white shadow-sm sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+    <a href={`${base}/`} aria-label="Neat & Co - Home">
+      <Logo size="h-10 w-10" textSize="text-2xl" variant="dark" />
+    </a>
+    <nav class="hidden md:flex items-center gap-6">
+      <a href={`${base}/#servicios`} class="text-gray-600 hover:text-blue-600 font-medium">{t.nav.services}</a>
+      <a href={`${base}/#nosotros`} class="text-gray-600 hover:text-blue-600 font-medium">{t.nav.about}</a>
+      <a href={`${base}/#contacto`} class="text-gray-600 hover:text-blue-600 font-medium">{t.nav.contact}</a>
+      <LanguageToggle lang={lang} />
+    </nav>
+    <div class="flex items-center gap-3">
+      <div class="md:hidden">
+        <LanguageToggle lang={lang} />
+      </div>
+      <a
+        href={`${base}/#contacto`}
+        class="bg-blue-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-blue-700 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300 active:scale-95"
+      >
+        {t.nav.quote}
+      </a>
+    </div>
+  </div>
+</header>

@@ -1,26 +1,67 @@
 ---
 import '../styles/global.css';
-const { title = "Neat &amp; Co | Professional Cleaning Services" } = Astro.props;
+import type { Lang } from '../i18n/ui';
+import { getAlternateUrl } from '../i18n/ui';
+
+interface Props {
+  title: string;
+  description: string;
+  lang: Lang;
+}
+
+const { title, description, lang } = Astro.props;
+const currentPath = Astro.url.pathname;
+const alternateUrl = getAlternateUrl(currentPath, lang);
+const alternateLang: Lang = lang === 'es' ? 'en' : 'es';
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const canonicalUrl = siteUrl + currentPath;
 ---
 <!doctype html>
-<html lang="es">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/png" href="/assets/logo.png" />
-		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content="Servicios de limpieza profesional para tu hogar y oficina.">
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Manrope:wght@200..800&display=swap" rel="stylesheet">
-		<title>{title}</title>
-		<style>
-			html {
-				scroll-behavior: smooth;
-			}
-		</style>
-	</head>
-	<body class="bg-gray-50 text-gray-900 font-sans">
-		<slot />
-	</body>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    {/* SEO multilingüe */}
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang={lang} href={canonicalUrl} />
+    <link rel="alternate" hreflang={alternateLang} href={siteUrl + alternateUrl} />
+    <link rel="alternate" hreflang="x-default" href={siteUrl + '/'} />
+
+    {/* Open Graph */}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'en_US'} />
+
+    {/* Twitter */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    {/* Fonts */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      :target {
+        scroll-margin-top: 80px;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-900 font-sans">
+    <slot />
+  </body>
 </html>
