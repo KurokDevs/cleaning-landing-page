@@ -120,7 +120,17 @@ export function ContactForm({ t }: Props) {
             <Label htmlFor="service">{t.serviceLabel}</Label>
             <Select name="service" required defaultValue="residencial" disabled={isSubmitting}>
               <SelectTrigger id="service">
-                <SelectValue placeholder={t.serviceLabel} />
+                <SelectValue placeholder={t.serviceLabel}>
+                  {(value: string) => {
+                    const labels: Record<string, string> = {
+                      residencial: t.serviceOptions.residential,
+                      comercial: t.serviceOptions.commercial,
+                      profunda: t.serviceOptions.deep,
+                      otro: t.serviceOptions.other,
+                    }
+                    return labels[value] ?? t.serviceLabel
+                  }}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="residencial">{t.serviceOptions.residential}</SelectItem>
