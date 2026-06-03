@@ -1,11 +1,12 @@
 import * as React from "react"
-import { useState } from "react"
+import { useRef, useState } from "react"
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { Textarea } from "./ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { Label } from "./ui/label"
-import { supabase } from "../lib/supabase"
+import { contactSchema } from "../lib/validation"
 
 type FormTranslations = {
   title: string
@@ -36,38 +37,97 @@ type FormTranslations = {
 
 interface Props {
   t: FormTranslations
+  /** Optional override; otherwise reads from PUBLIC_TURNSTILE_SITE_KEY */
+  turnstileSiteKey?: string
 }
 
-export function ContactForm({ t }: Props) {
+// Test key from Cloudflare's docs: always passes. Replace via env in prod.
+const TURNSTILE_TEST_SITE_KEY = "1x00000000000000000000AA"
+
+type FieldErrors = Partial<
+  Record<"name" | "email" | "phone" | "service" | "message", string>
+>
+
+export function ContactForm({ t, turnstileSiteKey }: Props) {
+  const siteKey =
+    turnstileSiteKey ||
+    (typeof window !== "undefined"
+      ? (import.meta.env.PUBLIC_TURNSTILE_SITE_KEY as string | undefined)
+      : undefined) ||
+    TURNSTILE_TEST_SITE_KEY
+
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
+  const [errorMessage, setErrorMessage] = useState<string>("")
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
+  const [turnstileToken, setTurnstileToken] = useState<string>("")
+  const turnstileRef = useRef<TurnstileInstance>(null)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setFieldErrors({})
+    setErrorMessage("")
     setIsSubmitting(true)
-    setSubmitStatus('idle')
 
     const form = e.currentTarget
     const formData = new FormData(form)
 
-    const name = formData.get("name") as string
-    const email = formData.get("email") as string
-    const phone = formData.get("phone") as string
-    const service = formData.get("service") as string
-    const message = formData.get("message") as string
+    const payload = {
+      name: String(formData.get("name") ?? ""),
+      email: String(formData.get("email") ?? ""),
+      phone: String(formData.get("phone") ?? ""),
+      service: String(formData.get("service") ?? ""),
+      message: String(formData.get("message") ?? ""),
+      honeypot: String(formData.get("company_website") ?? ""),
+      turnstileToken,
+    }
+
+    // Client-side validation for fast UX feedback. Server also re-validates.
+    const parsed = contactSchema.safeParse(payload)
+    if (!parsed.success) {
+      const flattened = parsed.error.flatten().fieldErrors
+      setFieldErrors({
+        name: flattened.name?.[0],
+        email: flattened.email?.[0],
+        phone: flattened.phone?.[0],
+        service: flattened.service?.[0],
+        message: flattened.message?.[0],
+      })
+      if (!turnstileToken) {
+        setErrorMessage(t.errorText)
+      }
+      setIsSubmitting(false)
+      return
+    }
 
     try {
-      const { error } = await supabase
-        .from('contact_requests')
-        .insert([{ name, email, phone, service, message }])
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(parsed.data),
+      })
 
-      if (error) throw error
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        console.error("Contact API error:", res.status, data)
+        setSubmitStatus("error")
+        setErrorMessage(t.errorText)
+        // Reset Turnstile so user can try again with a fresh token
+        turnstileRef.current?.reset()
+        setTurnstileToken("")
+        return
+      }
 
-      setSubmitStatus('success')
+      setSubmitStatus("success")
       form.reset()
-    } catch (error) {
-      console.error('Error al guardar:', error)
-      setSubmitStatus('error')
+      turnstileRef.current?.reset()
+      setTurnstileToken("")
+    } catch (err) {
+      console.error("Network error submitting form:", err)
+      setSubmitStatus("error")
+      setErrorMessage(t.errorText)
+      turnstileRef.current?.reset()
+      setTurnstileToken("")
     } finally {
       setIsSubmitting(false)
     }
@@ -80,28 +140,70 @@ export function ContactForm({ t }: Props) {
         <p className="text-gray-600 text-sm">{t.subtitle}</p>
       </div>
 
-      {submitStatus === 'success' ? (
+      {submitStatus === "success" ? (
         <div className="bg-green-50 text-green-800 p-6 rounded-xl border border-green-200 text-center">
           <div className="text-4xl mb-4">✅</div>
           <h4 className="font-bold text-lg mb-2">{t.successTitle}</h4>
           <p>{t.successText}</p>
           <Button
             className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 h-auto text-base"
-            onClick={() => setSubmitStatus('idle')}
+            onClick={() => setSubmitStatus("idle")}
           >
             {t.newRequestText}
           </Button>
         </div>
       ) : (
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-4" onSubmit={handleSubmit} noValidate>
+          {/* Honeypot — invisible to humans, bots fill it and get rejected. */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              left: "-9999px",
+              width: "1px",
+              height: "1px",
+              overflow: "hidden",
+            }}
+          >
+            <label htmlFor="company_website">Company website (leave blank)</label>
+            <input
+              id="company_website"
+              name="company_website"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+            />
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="name">{t.nameLabel}</Label>
-            <Input id="name" name="name" placeholder={t.namePlaceholder} required disabled={isSubmitting} />
+            <Input
+              id="name"
+              name="name"
+              placeholder={t.namePlaceholder}
+              required
+              disabled={isSubmitting}
+              aria-invalid={Boolean(fieldErrors.name)}
+            />
+            {fieldErrors.name && (
+              <p className="text-sm text-red-600">{fieldErrors.name}</p>
+            )}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="email">{t.emailLabel}</Label>
-            <Input id="email" name="email" type="email" placeholder={t.emailPlaceholder} required disabled={isSubmitting} />
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder={t.emailPlaceholder}
+              required
+              disabled={isSubmitting}
+              aria-invalid={Boolean(fieldErrors.email)}
+            />
+            {fieldErrors.email && (
+              <p className="text-sm text-red-600">{fieldErrors.email}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -113,7 +215,11 @@ export function ContactForm({ t }: Props) {
               placeholder={t.phonePlaceholder}
               required
               disabled={isSubmitting}
+              aria-invalid={Boolean(fieldErrors.phone)}
             />
+            {fieldErrors.phone && (
+              <p className="text-sm text-red-600">{fieldErrors.phone}</p>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -150,17 +256,33 @@ export function ContactForm({ t }: Props) {
               className="resize-none"
               rows={3}
               disabled={isSubmitting}
+              aria-invalid={Boolean(fieldErrors.message)}
+            />
+            {fieldErrors.message && (
+              <p className="text-sm text-red-600">{fieldErrors.message}</p>
+            )}
+          </div>
+
+          {/* Turnstile widget. Renders invisibly unless a challenge is needed. */}
+          <div className="flex justify-center">
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={siteKey}
+              options={{ theme: "light", size: "flexible" }}
+              onSuccess={(token) => setTurnstileToken(token)}
+              onError={() => setTurnstileToken("")}
+              onExpire={() => setTurnstileToken("")}
             />
           </div>
 
-          {submitStatus === 'error' && (
-            <p className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">{t.errorText}</p>
+          {submitStatus === "error" && errorMessage && (
+            <p className="text-red-600 text-sm bg-red-50 p-3 rounded-lg">{errorMessage}</p>
           )}
 
           <Button
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 h-auto hover:-translate-y-1 hover:shadow-lg transition-all duration-300 active:scale-95 disabled:opacity-70 disabled:hover:translate-y-0 text-base"
-            disabled={isSubmitting}
+            disabled={isSubmitting || !turnstileToken}
           >
             {isSubmitting ? t.sendingText : t.sendText}
           </Button>
