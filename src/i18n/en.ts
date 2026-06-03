@@ -68,7 +68,7 @@ export const en = {
     title: "Contact Us Today",
     subtitle: "Send us your info and we'll get back to you with a personalized quote. No obligation.",
     phone: "+1 (832) 436-5580",
-    email: "contact@limpiezaperfecta.com",
+    email: "helpneatco@hotmail.com",
     address: "5650 Timber Creek Pl Dr, Houston, TX 77084",
   },
   footer: {

@@ -68,7 +68,7 @@ export const es = {
     title: "Contáctanos hoy",
     subtitle: "Déjanos tus datos y te enviaremos una cotización personalizada sin compromiso.",
     phone: "+1 (832) 436-5580",
-    email: "contact@limpiezaperfecta.com",
+    email: "helpneatco@hotmail.com",
     address: "5650 Timber Creek Pl Dr, Houston, TX 77084",
   },
   footer: {
