@@ -1,5 +1,10 @@
 ---
+import { getImage } from 'astro:assets';
 import { BeforeAfterSlider } from '../BeforeAfterSlider';
+import messedImg from '../../assets/messed.jpg';
+import cleannedImg from '../../assets/cleanned.png';
+import cocinaSuciaImg from '../../assets/cocinasucia.webp';
+import cocinaLimpiaImg from '../../assets/cocinalimpia.png';
 import type { Translation } from '../../i18n/ui';
 
 interface Props {
@@ -7,6 +12,18 @@ interface Props {
 }
 
 const { t } = Astro.props;
+
+// Pre-optimize the before/after images at build time. The React
+// BeforeAfterSlider component just receives the final URL strings,
+// but the actual files are converted to WebP, resized, and cached.
+const opts = { format: 'webp' as const, quality: 80, width: 1200 };
+
+const [livingBefore, livingAfter, kitchenBefore, kitchenAfter] = await Promise.all([
+  getImage({ src: messedImg, ...opts }),
+  getImage({ src: cleannedImg, ...opts }),
+  getImage({ src: cocinaSuciaImg, ...opts }),
+  getImage({ src: cocinaLimpiaImg, ...opts }),
+]);
 ---
 
 <section id="resultados" class="py-20 bg-white">
@@ -20,8 +37,8 @@ const { t } = Astro.props;
         <h3 class="text-xl font-bold text-gray-900 mb-4 text-center">{t.results.livingRoom}</h3>
         <BeforeAfterSlider
           client:visible
-          beforeImage="/assets/messed.jpg"
-          afterImage="/assets/cleanned.png"
+          beforeImage={livingBefore.src}
+          afterImage={livingAfter.src}
           beforeLabel={t.results.before}
           afterLabel={t.results.after}
         />
@@ -30,8 +47,8 @@ const { t } = Astro.props;
         <h3 class="text-xl font-bold text-gray-900 mb-4 text-center">{t.results.kitchen}</h3>
         <BeforeAfterSlider
           client:visible
-          beforeImage="/assets/cocinasucia.webp"
-          afterImage="/assets/cocinalimpia.png"
+          beforeImage={kitchenBefore.src}
+          afterImage={kitchenAfter.src}
           beforeLabel={t.results.before}
           afterLabel={t.results.after}
         />
